@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국자활복지개발원 취업도전형 사업단 인턴처 DB</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kblue: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            200: '#bae0fd',
+                            600: '#0066b3',
+                            700: '#004b87',
+                            800: '#003a6b',
+                            900: '#00294e',
+                        },
+                        korange: {
+                            500: '#f58220',
+                            600: '#e06f12',
+                        },
+                        kmint: {
+                            500: '#00a3af',
+                            600: '#008a94',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- SheetJS (xlsx) CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- html2pdf CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-800 antialiased">
+
+    <!-- 상단 긴급 안내 띠배너 -->
+    <div class="bg-gradient-to-r from-kblue-900 via-kblue-700 to-kblue-800 text-white text-xs sm:text-sm py-2 px-4 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-korange-500 text-white">
+                    2026 시범사업
+                </span>
+                <span class="font-medium text-slate-100">
+                    취업도전형 사업단 자활참여자 맞춤 인턴처 공식 데이터베이스
+                </span>
+            </div>
+            <div class="flex items-center space-x-4 text-xs text-slate-200">
+                <span class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5 text-korange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 4V3z"/></svg>
+                    담당: 방지현 대리 (02-3415-6959)
+                </span>
+                <span class="hidden md:inline text-slate-400">|</span>
+                <a href="mailto:julia@kdissw.or.kr" class="hidden md:inline hover:text-white underline">julia@kdissw.or.kr</a>
+                <span class="hidden md:inline text-slate-400">|</span>
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="syncStatusBadge">실시간 연동 중</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 헤더 -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- 로고 & 타이틀 -->
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="flex items-center gap-3 group">
+                        <img src="head_logo.png" onerror="this.onerror=null; this.src='https://www.kdissw.or.kr/main/img/main/head_logo.png';" alt="한국자활복지개발원 로고" class="h-10 sm:h-12 w-auto object-contain">
+                        <div class="border-l border-slate-300 pl-3.5 flex flex-col">
+                            <span class="text-xs font-semibold text-kblue-700 tracking-wider">한국자활복지개발원 KDISSW</span>
+                            <span class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-kblue-600 transition-colors">
+                                취업도전형 사업단 인턴처 DB
+                            </span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 네비게이션 & 관리자 바로가기 -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <nav class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-600">
+                        <button onclick="scrollToSection('search-section')" class="px-3 py-2 rounded-lg hover:text-kblue-700 hover:bg-slate-100 transition-colors text-kblue-700 font-semibold">인턴처 검색</button>
+                        <button onclick="scrollToSection('matching-status-section')" class="px-3 py-2 rounded-lg hover:text-kblue-700 hover:bg-slate-100 transition-colors">매칭 현황</button>
+                        <button onclick="openNoticeModal()" class="px-3 py-2 rounded-lg hover:text-kblue-700 hover:bg-slate-100 transition-colors">공지사항</button>
+                        <button onclick="openQnaModal()" class="px-3 py-2 rounded-lg hover:text-kblue-700 hover:bg-slate-100 transition-colors">Q&A 문의</button>
+                    </nav>
+
+                    <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
+
+                    <!-- 관리자 페이지 이동 버튼 -->
+                    <a href="admin.html" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white bg-slate-800 hover:bg-kblue-700 rounded-lg shadow-sm transition-all transform hover:-translate-y-0.5">
+                        <svg class="w-4 h-4 text-korange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        <span>관리자 전용</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 히어로 배너 섹션 -->
+    <section class="bg-gradient-to-br from-kblue-700 via-kblue-600 to-kblue-800 text-white py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden no-print">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div class="max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-white text-xs font-semibold mb-3 border border-white/20">
+                        <span class="w-2 h-2 rounded-full bg-korange-500"></span>
+                        자활 참여자 맞춤형 취업·인턴십 매칭 플랫폼
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white mb-3">
+                        나에게 딱 맞는 일자리와 인턴처,<br class="hidden sm:inline">
+                        <span class="text-amber-300">지역별·직무별</span>로 한눈에 찾아보세요!
+                    </h1>
+                    <p class="text-sm sm:text-base text-blue-100 font-light leading-relaxed">
+                        전국 광역 및 지역자활센터가 엄선 발굴한 직접전환형 및 체험형 우수 인턴처 DB입니다.<br class="hidden sm:inline">
+                        원하는 인턴처를 검색하고 간편하게 <strong>참여자 매칭 신청</strong>을 진행하실 수 있습니다.
+                    </p>
+                </div>
+
+                <!-- 핵심 요약 카드 -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-auto">
+                    <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl p-3.5 text-center shadow-inner">
+                        <span class="text-xs text-blue-200 font-medium block">총 등록 인턴처</span>
+                        <span id="heroTotalCount" class="text-2xl font-black text-white mt-0.5 block">258</span>
+                        <span class="text-[11px] text-blue-200">개소</span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl p-3.5 text-center shadow-inner">
+                        <span class="text-xs text-blue-200 font-medium block">모집중 인턴처</span>
+                        <span id="heroRecruitingCount" class="text-2xl font-black text-emerald-300 mt-0.5 block">-</span>
+                        <span class="text-[11px] text-emerald-200">즉시 지원 가능</span>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 bg-white/10 backdrop-blur-md border border-white/15 rounded-xl p-3.5 text-center shadow-inner">
+                        <span class="text-xs text-blue-200 font-medium block">실시간 매칭현황</span>
+                        <span id="heroMatchedCount" class="text-2xl font-black text-amber-300 mt-0.5 block">-</span>
+                        <span class="text-[11px] text-amber-200">명 매칭완료</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 담당자 및 본원 안내 카드 -->
+            <div class="mt-8 pt-6 border-t border-white/15 flex flex-wrap items-center justify-between text-xs text-blue-100 gap-4">
+                <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                    <span class="flex items-center gap-1.5 font-medium">
+                        <svg class="w-4 h-4 text-korange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zm.75 4a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V6z" clip-rule="evenodd"/></svg>
+                        <strong>담당자 문의:</strong> 한국자활복지개발원 사업개발부 방지현 대리 (02-3415-6959)
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-korange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+                        이메일: julia@kdissw.or.kr
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-korange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                        주소: 서울특별시 서대문구 통일로 135 한국자활복지개발원
+                    </span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="KDISSW.exportInternsToExcel()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-medium text-xs transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        인턴처 DB 엑셀 다운로드
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8" id="search-section">
+
+        <!-- 검색 & 스마트 다중 필터 카드 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 sm:p-6 mb-8 transition-all">
+            
+            <!-- 통합 검색창 -->
+            <div class="relative mb-5">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
+                <input type="text" id="searchInput" 
+                    placeholder="기업명, 직무내용, 업종, 근무지 주소, 우대 자격요건 등을 검색하세요 (예: 제과제빵, 바리스타, 편의점, 배송, 주거복지...)" 
+                    class="block w-full pl-11 pr-24 py-3.5 sm:text-base border border-slate-300 rounded-xl leading-5 bg-slate-50/50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-kblue-600 focus:border-kblue-600 shadow-xs transition-all">
+                <button type="button" onclick="handleSearch()" class="absolute right-2 top-2 bottom-2 px-4 bg-kblue-600 hover:bg-kblue-700 text-white font-medium text-sm rounded-lg shadow-xs transition-colors flex items-center gap-1">
+                    <span>검색</span>
+                </button>
+            </div>
+
+            <!-- 지역(권역) 탭 필터 -->
+            <div class="mb-5 pb-5 border-b border-slate-100">
+                <div class="flex items-center justify-between mb-2.5">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-kblue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                        지역별 필터 (광역 권역)
+                    </label>
+                    <span id="regionCountBadge" class="text-xs text-slate-400 font-medium">전체 권역 대상</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 sm:gap-2" id="regionFilterContainer">
+                    <!-- JS에서 지역 버튼 렌더링 -->
+                </div>
+            </div>
+
+            <!-- 세부 옵션 필터 (사업단 구분, 기업 구분, 모집 상태) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
+                <!-- 사업단 구분 -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">인턴(사업단) 구분</label>
+                    <select id="internTypeFilter" onchange="applyFilters()" class="w-full text-sm py-2.5 px-3 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-kblue-600 focus:border-kblue-600">
+                        <option value="">전체 (직접전환형 + 체험형)</option>
+                        <option value="직접전환형">직접전환형(6개월~최대 3년)</option>
+                        <option value="체험형">체험형(2~6개월)</option>
+                        <option value="청년">청년자립도전사업단</option>
+                    </select>
+                </div>
+
+                <!-- 기업 구분 -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">기업 구분</label>
+                    <select id="companyTypeFilter" onchange="applyFilters()" class="w-full text-sm py-2.5 px-3 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-kblue-600 focus:border-kblue-600">
+                        <option value="">전체 기업 구분</option>
+                        <option value="자활기업">자활기업</option>
+                        <option value="법인사업체">법인사업체</option>
+                        <option value="개인사업체">개인사업체</option>
+                        <option value="공기업">공기업(공공기관)</option>
+                        <option value="기타">기타</option>
+                    </select>
+                </div>
+
+                <!-- 모집 상태 -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">모집 상태</label>
+                    <select id="statusFilter" onchange="applyFilters()" class="w-full text-sm py-2.5 px-3 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-kblue-600 focus:border-kblue-600">
+                        <option value="">전체 (모집중 + 마감)</option>
+                        <option value="모집중" selected>모집중 (지원 가능만 보기)</option>
+                        <option value="마감">마감</option>
+                    </select>
+                </div>
+
+                <!-- 정렬 기준 -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">정렬 기준</label>
+                    <select id="sortBy" onchange="applyFilters()" class="w-full text-sm py-2.5 px-3 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-kblue-600 focus:border-kblue-600">
+                        <option value="id_asc">기본 번호순 (1번부터)</option>
+                        <option value="recruit_desc">모집 규모 많은순</option>
+                        <option value="name_asc">기업명 가나다순</option>
+                        <option value="matched_desc">매칭 참여자 많은순</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 활성 필터 태그 및 리셋 버튼 -->
+            <div class="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-2" id="activeFilterTags">
+                    <!-- 활성화된 필터 뱃지들 -->
+                </div>
+                <button type="button" onclick="resetAllFilters()" class="text-xs text-slate-500 hover:text-korange-600 font-medium inline-flex items-center gap-1 transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    필터 전체 초기화
+                </button>
+            </div>
+        </div>
+
+        <!-- 검색 결과 헤더 컨트롤 (결과 건수 및 뷰 모드 전환) -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+            <div class="flex items-center gap-2">
+                <h2 class="text-lg font-bold text-slate-900">검색된 인턴처 목록</h2>
+                <span id="resultCountBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-kblue-100 text-kblue-700">
+                    총 0건
+                </span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- 뷰 모드 토글 (카드 뷰 vs 테이블 뷰) -->
+                <div class="inline-flex rounded-lg border border-slate-300 p-0.5 bg-slate-100">
+                    <button id="viewGridBtn" onclick="setViewMode('grid')" class="px-3 py-1 text-xs font-medium rounded-md bg-white text-slate-800 shadow-xs flex items-center gap-1 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                        <span>카드 뷰</span>
+                    </button>
+                    <button id="viewTableBtn" onclick="setViewMode('table')" class="px-3 py-1 text-xs font-medium rounded-md text-slate-600 hover:text-slate-800 flex items-center gap-1 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                        <span>테이블 뷰</span>
+                    </button>
+                </div>
+
+                <!-- 전체 인쇄 / PDF 다운로드 -->
+                <button onclick="window.print()" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    <span>목록 인쇄</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 인턴처 카드 그리드 뷰 컨테이너 -->
+        <div id="internGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- JS에서 카드 렌더링 -->
+        </div>
+
+        <!-- 인턴처 테이블 뷰 컨테이너 -->
+        <div id="internTableContainer" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-[11px] tracking-wider">
+                            <th class="py-3 px-4">No.</th>
+                            <th class="py-3 px-4">상태</th>
+                            <th class="py-3 px-4">권역</th>
+                            <th class="py-3 px-4">기업명 / 업종</th>
+                            <th class="py-3 px-4">사업단 구분</th>
+                            <th class="py-3 px-4">직무 내용</th>
+                            <th class="py-3 px-4">모집인원</th>
+                            <th class="py-3 px-4">근무장소</th>
+                            <th class="py-3 px-4">매칭 현황</th>
+                            <th class="py-3 px-4 text-center">작업</th>
+                        </tr>
+                    </thead>
+                    <tbody id="internTableBody" class="divide-y divide-slate-100 text-slate-700">
+                        <!-- JS에서 테이블 행 렌더링 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 검색 결과가 없을 때의 화면 -->
+        <div id="emptyResultContainer" class="hidden text-center py-16 bg-white rounded-2xl border border-slate-200 p-8">
+            <div class="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center text-slate-400">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="text-base font-bold text-slate-800 mb-1">검색 조건에 맞는 인턴처가 없습니다</h3>
+            <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mb-5">
+                검색어를 변경하시거나 지역, 사업단 구분 등 선택된 필터를 초기화해 보세요.
+            </p>
+            <button onclick="resetAllFilters()" class="px-4 py-2 bg-kblue-600 hover:bg-kblue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors">
+                필터 전체 초기화
+            </button>
+        </div>
+
+        <!-- 매칭 현황 및 참여 안내 섹션 -->
+        <section id="matching-status-section" class="mt-16 pt-10 border-t border-slate-200">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
+                <div>
+                    <span class="text-xs font-bold text-kblue-600 uppercase tracking-wider block mb-1">REAL-TIME MATCHING</span>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900">실시간 참여자-인턴처 매칭 현황</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">자활 참여자 여러분이 신청하신 매칭 현황이 실시간으로 집계 및 반영됩니다.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-500">최근 업데이트: <span id="lastSyncTime" class="font-semibold text-slate-700">방금 전</span></span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="matchingQuickStats">
+                    <!-- 매칭 요약 카드들 -->
+                </div>
+
+                <div class="border-t border-slate-100 pt-5">
+                    <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center justify-between">
+                        <span>최근 매칭 신청 내역 (실시간 누적)</span>
+                        <span class="text-xs text-slate-400 font-normal">개인정보 보호를 위해 성명 일부가 마스킹 처리됩니다</span>
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left">
+                            <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+                                <tr>
+                                    <th class="py-2.5 px-3">신청일</th>
+                                    <th class="py-2.5 px-3">인턴처 기업명</th>
+                                    <th class="py-2.5 px-3">참여자(소속센터)</th>
+                                    <th class="py-2.5 px-3">상태</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentMatchingsTableBody" class="divide-y divide-slate-100 text-slate-600">
+                                <!-- JS에서 최근 매칭 내역 렌더링 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 인턴처 상세 모달 (PDF 출력 및 네이버 지도 연동) -->
+    <div id="internDetailModal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+        <div class="relative bg-white rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+            
+            <!-- 모달 헤더 -->
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between no-print">
+                <div class="flex items-center gap-2.5">
+                    <span id="modalStatusBadge" class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800">모집중</span>
+                    <span id="modalInternTypeBadge" class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-100 text-kblue-700">직접전환형</span>
+                    <span id="modalRegionBadge" class="px-2 py-0.5 text-xs font-semibold rounded-md bg-slate-200 text-slate-700">강원</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="downloadCurrentDetailPdf()" class="px-3 py-1.5 text-xs font-semibold text-white bg-kblue-600 hover:bg-kblue-700 rounded-lg shadow-xs flex items-center gap-1.5 transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span>PDF 다운로드</span>
+                    </button>
+                    <button onclick="closeDetailModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 모달 본문 (PDF 출력 대상 컨테이너: #pdfExportArea) -->
+            <div class="p-6 overflow-y-auto flex-1 space-y-6" id="pdfExportArea">
+                
+                <!-- 상단 타이틀 및 로고 (PDF 인쇄 시 공식 문서 헤더 포함) -->
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-kblue-700 uppercase tracking-wider">한국자활복지개발원 취업도전형 사업단 인턴처 안내서</span>
+                        <span class="text-xs text-slate-400">관리번호: <strong id="modalIdText" class="text-slate-700">No. 1</strong></span>
+                    </div>
+                    <h2 id="modalCompanyName" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">강원대학교 강릉원주생활협동조합</h2>
+                    <div class="flex flex-wrap items-center gap-3 mt-2 text-xs sm:text-sm text-slate-600">
+                        <span>대표자: <strong id="modalCeoName" class="text-slate-800">이이범</strong></span>
+                        <span class="text-slate-300">|</span>
+                        <span>기업구분: <strong id="modalCompanyType" class="text-slate-800">법인사업체</strong></span>
+                        <span class="text-slate-300">|</span>
+                        <span>기업규모: <strong id="modalCompanyScale" class="text-slate-800">중소기업</strong></span>
+                        <span class="text-slate-300">|</span>
+                        <span>업종: <strong id="modalIndustry" class="text-slate-800">소매업</strong></span>
+                    </div>
+                </div>
+
+                <!-- 근무지 주소 & 네이버 지도 바로가기 버튼 -->
+                <div class="bg-blue-50/60 rounded-xl p-4 border border-blue-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-start gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-kblue-600 text-white flex items-center justify-center shrink-0 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-blue-900 block">근무장소 (실제 근무지)</span>
+                            <p id="modalAddress" class="text-sm font-semibold text-slate-800 mt-0.5 whitespace-pre-line leading-relaxed">
+                                강원특별자치도 강릉시 죽헌길 7
+                            </p>
+                        </div>
+                    </div>
+                    <div class="no-print shrink-0">
+                        <a id="modalNaverMapBtn" href="https://map.naver.com" target="_blank" rel="noopener noreferrer" 
+                           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#03C75A] hover:bg-[#02b350] text-white text-xs font-bold shadow-xs transition-colors">
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845z"/></svg>
+                            <span>네이버 지도로 길찾기</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 주요 근무조건 그리드 테이블 -->
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-1.5">
+                        <span class="w-1.5 h-4 bg-kblue-600 rounded-full"></span>
+                        인턴 모집 내용 및 근무 조건
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+                        <div>
+                            <span class="text-slate-400 block mb-0.5">모집 규모</span>
+                            <span id="modalRecruitCount" class="font-bold text-slate-800 text-sm">1명</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block mb-0.5">출퇴근 시간</span>
+                            <span id="modalWorkHours" class="font-bold text-slate-800 text-sm">09:00~18:00</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block mb-0.5">주당 근무시간</span>
+                            <span id="modalWeeklyHours" class="font-bold text-slate-800 text-sm">40시간</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block mb-0.5">근무 기간</span>
+                            <span id="modalWorkPeriod" class="font-bold text-slate-800 text-sm">12개월</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 직무 상세 내용 -->
+                <div class="bg-white border border-slate-200 rounded-xl p-4.5">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">담당 직무 (상세 기술)</h4>
+                    <p id="modalJobDesc" class="text-sm text-slate-800 leading-relaxed whitespace-pre-line font-medium bg-slate-50/70 p-3.5 rounded-lg border border-slate-100">
+                        매장 운영 및 고객응대, 상품 판매·진열·재고관리
+                    </p>
+                </div>
+
+                <!-- 자격 요건 및 우대사항 -->
+                <div class="bg-white border border-slate-200 rounded-xl p-4.5">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">자격 요건 및 우대사항</h4>
+                    <p id="modalRequirements" class="text-sm text-slate-800 leading-relaxed whitespace-pre-line bg-slate-50/70 p-3.5 rounded-lg border border-slate-100">
+                        별도 자격요건 및 우대사항 없음
+                    </p>
+                </div>
+
+                <!-- 접수 방법 및 발굴 기관 연락처 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- 접수 정보 -->
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <h4 class="text-xs font-bold text-slate-700 mb-2.5 flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-kblue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                            접수 방법 및 기한
+                        </h4>
+                        <dl class="space-y-1.5 text-xs">
+                            <div class="flex justify-between"><dt class="text-slate-500">접수 방법:</dt><dd id="modalApplyMethod" class="font-semibold text-slate-800">광역담당자를 통해 매칭</dd></div>
+                            <div class="flex justify-between"><dt class="text-slate-500">접수 세부사항:</dt><dd id="modalApplyDetails" class="font-semibold text-slate-800">-</dd></div>
+                            <div class="flex justify-between"><dt class="text-slate-500">모집 기한:</dt><dd id="modalDeadline" class="font-semibold text-slate-800">상시모집</dd></div>
+                            <div class="flex justify-between"><dt class="text-slate-500">기업 대표번호:</dt><dd id="modalMainPhone" class="font-semibold text-slate-800">033-640-2038</dd></div>
+                        </dl>
+                    </div>
+
+                    <!-- 발굴 기관 정보 -->
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+                        <h4 class="text-xs font-bold text-slate-700 mb-2.5 flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-kblue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            발굴 기관 및 인사 담당자
+                        </h4>
+                        <dl class="space-y-1.5 text-xs">
+                            <div class="flex justify-between"><dt class="text-slate-500">발굴 기관명:</dt><dd id="modalOrgName" class="font-semibold text-slate-800">강원광역자활센터</dd></div>
+                            <div class="flex justify-between"><dt class="text-slate-500">발굴 담당자:</dt><dd id="modalManagerInfo" class="font-semibold text-slate-800">김나온 대리 (070-4603-2655)</dd></div>
+                            <div class="flex justify-between"><dt class="text-slate-500">인사 담당자:</dt><dd id="modalHrInfo" class="font-semibold text-slate-800">이동일 (033-640-2038)</dd></div>
+                            <div class="flex justify-between"><dt class="text-slate-500">실시간 매칭 결과:</dt><dd id="modalMatchingResult" class="font-bold text-korange-600">1명 매칭 완료</dd></div>
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- PDF 출력용 안내 푸터 (화면에는 안 보이고 PDF 출력 시 포함) -->
+                <div class="pt-6 border-t border-slate-200 text-center text-[10px] text-slate-400">
+                    본 문서는 한국자활복지개발원 취업도전형 사업단 인턴처 전산 DB에서 출력된 공식 자료입니다. (문의: 02-3415-6959)
+                </div>
+            </div>
+
+            <!-- 모달 하단 액션 버튼 바 -->
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 no-print">
+                <div class="text-xs text-slate-500">
+                    실시간 매칭 인원: <strong id="modalBottomMatchedCount" class="text-kblue-700 font-bold">1명</strong>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="closeDetailModal()" class="px-4 py-2 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors">
+                        닫기
+                    </button>
+                    <button id="modalApplyBtn" onclick="openApplyMatchingModal(currentSelectedInternId)" class="px-5 py-2 text-xs font-bold text-white bg-korange-500 hover:bg-korange-600 rounded-lg shadow-sm transition-all transform hover:-translate-y-0.5 flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                        <span>참여자 매칭 신청하기</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 실시간 참여자 매칭 신청 모달 -->
+    <div id="applyMatchingModal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+        <div class="relative bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+            <div class="px-6 py-4 bg-kblue-700 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-korange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <h3 class="text-base font-bold">인턴처 참여자 매칭 신청</h3>
+                </div>
+                <button onclick="closeApplyMatchingModal()" class="text-blue-200 hover:text-white p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <form id="applyMatchingForm" onsubmit="submitMatchingForm(event)" class="p-6 space-y-4">
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                    <span class="text-slate-400 block mb-0.5">신청 대상 인턴처</span>
+                    <strong id="applyTargetCompanyName" class="text-slate-900 text-sm block">강원대학교 강릉원주생활협동조합</strong>
+                    <span id="applyTargetInfo" class="text-slate-500 text-[11px] block mt-0.5">강원 | 직접전환형 | 모집 1명</span>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">참여자 성명 <span class="text-rose-500">*</span></label>
+                    <input type="text" id="applyParticipantName" required placeholder="예: 홍길동" class="w-full text-sm px-3.5 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-kblue-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">소속 기관 (지역자활센터명) <span class="text-rose-500">*</span></label>
+                    <input type="text" id="applyOrganization" required placeholder="예: 서울강북지역자활센터, 춘천지역자활센터 등" class="w-full text-sm px-3.5 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-kblue-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">담당 실무자 또는 참여자 연락처 <span class="text-rose-500">*</span></label>
+                    <input type="tel" id="applyContact" required placeholder="예: 010-1234-5678" class="w-full text-sm px-3.5 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-kblue-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">희망 근무 시작일 및 신청 메모</label>
+                    <textarea id="applyNote" rows="3" placeholder="예: 2026년 11월 1일부터 참여 희망, 제과제빵 자격증 소지자 등 메모" class="w-full text-sm px-3.5 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-kblue-600 focus:outline-none"></textarea>
+                </div>
+
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-xs text-amber-900 leading-relaxed">
+                    <p><strong>안내사항:</strong> 신청 즉시 해당 인턴처의 실시간 매칭 인원이 업데이트되며, 관리자 페이지 및 사용자 페이지 모두에 즉시 반영됩니다.</p>
+                </div>
+
+                <div class="pt-3 flex items-center justify-end gap-2">
+                    <button type="button" onclick="closeApplyMatchingModal()" class="px-4 py-2 text-xs font-medium text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50">
+                        취소
+                    </button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-kblue-600 hover:bg-kblue-700 rounded-lg shadow-sm transition-colors">
+                        매칭 신청 완료
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 공지사항 모달 -->
+    <div id="noticeModal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+        <div class="relative bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+            <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                    <h3 class="text-base font-bold">사업단 공지사항</h3>
+                </div>
+                <button onclick="closeNoticeModal()" class="text-slate-400 hover:text-white p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto flex-1 space-y-4">
+                <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-100 text-xs text-kblue-900 flex items-center justify-between">
+                    <span>공지사항 등록 및 수정 권한은 <strong>'관리자'</strong>에게만 있습니다.</span>
+                    <a href="admin.html" class="underline font-semibold hover:text-kblue-700">관리자 페이지 가기 &rarr;</a>
+                </div>
+
+                <div id="noticeListContainer" class="divide-y divide-slate-100">
+                    <!-- JS에서 공지사항 목록 렌더링 -->
+                </div>
+            </div>
+
+            <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-right">
+                <button onclick="closeNoticeModal()" class="px-4 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Q&A 모달 -->
+    <div id="qnaModal" class="fixed inset-0 z-50 overflow-y-auto hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+        <div class="relative bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+            <div class="px-6 py-4 bg-kblue-800 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-korange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <h3 class="text-base font-bold">인턴처 DB Q&A 질문과 답변</h3>
+                </div>
+                <button onclick="closeQnaModal()" class="text-blue-200 hover:text-white p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto flex-1 space-y-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs text-slate-500">인턴처 매칭과 관련해 궁금한 점을 질문해 보세요.</span>
+                    <button onclick="toggleQnaWriteForm()" class="px-3 py-1.5 text-xs font-bold text-white bg-korange-500 hover:bg-korange-600 rounded-lg shadow-xs transition-colors">
+                        + 새 질문 등록
+                    </button>
+                </div>
+
+                <!-- 질문 작성 폼 (토글) -->
+                <div id="qnaWriteFormContainer" class="hidden bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                    <h4 class="text-xs font-bold text-slate-800 mb-3">새 질문 작성</h4>
+                    <form onsubmit="submitQna(event)" class="space-y-3">
+                        <div>
+                            <input type="text" id="qnaAuthor" required placeholder="작성자 성명 (예: 김*수)" class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white">
+                        </div>
+                        <div>
+                            <input type="text" id="qnaTitle" required placeholder="질문 제목을 입력하세요" class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white">
+                        </div>
+                        <div>
+                            <textarea id="qnaQuestion" required rows="3" placeholder="질문 내용을 구체적으로 작성해 주세요" class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg bg-white"></textarea>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <button type="button" onclick="toggleQnaWriteForm()" class="px-3 py-1.5 text-xs text-slate-600 bg-white border border-slate-300 rounded-lg">취소</button>
+                            <button type="submit" class="px-4 py-1.5 text-xs font-bold text-white bg-kblue-600 rounded-lg hover:bg-kblue-700">질문 등록하기</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="qnaListContainer" class="space-y-3">
+                    <!-- JS에서 Q&A 목록 렌더링 -->
+                </div>
+            </div>
+
+            <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-right">
+                <button onclick="closeQnaModal()" class="px-4 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-12 border-t border-slate-800 mt-auto no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <img src="head_logo.png" onerror="this.onerror=null; this.src='https://www.kdissw.or.kr/main/img/main/head_logo.png';" alt="한국자활복지개발원 로고" class="h-9 w-auto brightness-200 contrast-125">
+                    <span class="text-base font-bold text-white">한국자활복지개발원</span>
+                </div>
+                <div class="flex flex-wrap gap-4 text-xs text-slate-400">
+                    <a href="https://www.kdissw.or.kr" target="_blank" class="hover:text-white transition-colors">개발원 공식홈페이지</a>
+                    <a href="https://www.welfareinfo.or.kr" target="_blank" class="hover:text-white transition-colors">자활정보시스템</a>
+                    <a href="https://hope.welfareinfo.or.kr" target="_blank" class="hover:text-white transition-colors">자산포털</a>
+                    <a href="admin.html" class="text-korange-500 hover:text-korange-400 font-bold transition-colors">관리자 전용 로그인</a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 leading-relaxed">
+                <div>
+                    <p class="font-medium text-slate-300 mb-1">한국자활복지개발원 사업개발부 (취업도전형 사업단 인턴처 담당)</p>
+                    <p>주소: (03738) 서울특별시 서대문구 통일로 135 한국자활복지개발원</p>
+                    <p>담당자: 방지현 대리 ☎ 02-3415-6959 | ✉ julia@kdissw.or.kr</p>
+                </div>
+                <div class="md:text-right flex flex-col justify-between">
+                    <p class="text-slate-500">본 시스템에 등록된 인턴처 정보는 2026 시범사업-취업도전형 사업단 공식 발굴 DB에 의거합니다.</p>
+                    <p class="text-slate-600 mt-2">&copy; 2026 Korea Development Institute for Sustainable Social Welfare. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 알림 토스트 컴포넌트 -->
+    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-slate-700">
+            <span id="toastIcon" class="text-emerald-400 text-lg">✓</span>
+            <span id="toastMessage" class="text-xs sm:text-sm font-medium">안내 메시지</span>
+        </div>
+    </div>
+
+    <!-- 데이터 파일 및 공통 라이브러리 스크립트 로드 -->
+    <script src="data.js"></script>
+    <script src="common.js"></script>
+
+    <!-- 사용자 페이지 애플리케이션 로직 스크립트 -->
+    <script>
+        // 전역 상태 변수
+        let currentInterns = [];
+        let filteredInterns = [];
+        let selectedRegion = '';
+        let currentViewMode = 'grid'; // 'grid' | 'table'
+        let currentSelectedInternId = null;
+
+        // 주요 16개 광역 권역 목록
+        const REGIONS = ['전체', '강원', '경기', '경남', '경북', '광주', '대구', '대전', '부산', '서울', '울산', '인천', '전남', '전북', '충남', '충북'];
+
+        // DOM 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            initApp();
+            
+            // 실시간 동기화 리스너
+            KDISSW.onSync((event) => {
+                console.log('실시간 데이터 갱신 감지:', event);
+                showToast('데이터가 실시간으로 동기화되었습니다.');
+                refreshData();
+            });
+
+            // 검색어 입력 시 엔터키 처리
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+        });
+
+        // 앱 초기화
+        function initApp() {
+            renderRegionButtons();
+            refreshData();
+        }
+
+        // 데이터 갱신
+        function refreshData() {
+            currentInterns = KDISSW.getInternList();
+            updateHeroStats();
+            applyFilters();
+            renderMatchingStatusSection();
+            document.getElementById('lastSyncTime').textContent = new Date().toLocaleTimeString();
+        }
+
+        // 상단 히어로 통계 업데이트
+        function updateHeroStats() {
+            const stats = KDISSW.calculateStats();
+            document.getElementById('heroTotalCount').textContent = stats.totalInterns;
+            document.getElementById('heroRecruitingCount').textContent = stats.recruitingCount;
+            document.getElementById('heroMatchedCount').textContent = stats.totalMatched;
+        }
+
+        // 지역 필터 버튼 렌더링
+        function renderRegionButtons() {
+            const container = document.getElementById('regionFilterContainer');
+            container.innerHTML = '';
+
+            REGIONS.forEach(reg => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = getRegionBtnClass(reg === (selectedRegion || '전체'));
+                btn.textContent = reg;
+                btn.onclick = () => selectRegion(reg === '전체' ? '' : reg);
+                container.appendChild(btn);
+            });
+        }
+
+        function getRegionBtnClass(isActive) {
+            if (isActive) {
+                return 'px-3 py-1.5 text-xs font-bold rounded-lg bg-kblue-700 text-white shadow-xs transition-all';
+            }
+            return 'px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors';
+        }
+
+        function selectRegion(reg) {
+            selectedRegion = reg;
+            renderRegionButtons();
+            document.getElementById('regionCountBadge').textContent = reg ? `${reg} 권역 선택됨` : '전체 권역 대상';
+            applyFilters();
+        }
+
+        // 다중 필터 적용 로직
+        function applyFilters() {
+            const searchQuery = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+            const internType = document.getElementById('internTypeFilter').value;
+            const companyType = document.getElementById('companyTypeFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            filteredInterns = currentInterns.filter(item => {
+                // 1. 지역 필터
+                if (selectedRegion && (item.region || '').trim() !== selectedRegion) {
+                    return false;
+                }
+
+                // 2. 사업단 구분 필터
+                if (internType && !(item.internType || '').includes(internType)) {
+                    return false;
+                }
+
+                // 3. 기업 구분 필터
+                if (companyType && !(item.companyType || '').includes(companyType)) {
+                    return false;
+                }
+
+                // 4. 모집 상태 필터
+                if (status) {
+                    const itemStatus = (item.status || '모집중').trim();
+                    if (status === '모집중' && !itemStatus.includes('모집')) return false;
+                    if (status === '마감' && !itemStatus.includes('마감')) return false;
+                }
+
+                // 5. 검색어 통합 매칭 (기업명, 직무, 업종, 주소, 자격요건, 인사담당자)
+                if (searchQuery) {
+                    const matchTarget = [
+                        item.companyName,
+                        item.jobDesc,
+                        item.industry,
+                        item.address,
+                        item.requirements,
+                        item.internType,
+                        item.region,
+                        item.ceoName,
+                        item.hrName,
+                        item.managerName
+                    ].filter(Boolean).join(' ').toLowerCase();
+
+                    if (!matchTarget.includes(searchQuery)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            // 정렬 적용
+            sortFilteredInterns(sortBy);
+
+            // 결과 렌더링
+            renderResults();
+            renderActiveFilterTags();
+        }
+
+        // 정렬 함수
+        function sortFilteredInterns(sortBy) {
+            if (sortBy === 'id_asc') {
+                filteredInterns.sort((a, b) => Number(a.id) - Number(b.id));
+            } else if (sortBy === 'recruit_desc') {
+                filteredInterns.sort((a, b) => {
+                    const cntA = parseInt((String(a.recruitCount || '').match(/\d+/) || [1])[0], 10);
+                    const cntB = parseInt((String(b.recruitCount || '').match(/\d+/) || [1])[0], 10);
+                    return cntB - cntA;
+                });
+            } else if (sortBy === 'name_asc') {
+                filteredInterns.sort((a, b) => (a.companyName || '').localeCompare(b.companyName || '', 'ko'));
+            } else if (sortBy === 'matched_desc') {
+                filteredInterns.sort((a, b) => {
+                    const countA = KDISSW.getMatchedCountForIntern(a.id);
+                    const countB = KDISSW.getMatchedCountForIntern(b.id);
+                    return countB - countA;
+                });
+            }
+        }
+
+        // 검색 버튼 클릭 시
+        function handleSearch() {
+            applyFilters();
+            scrollToSection('search-section');
+        }
+
+        // 활성화된 필터 뱃지 표시
+        function renderActiveFilterTags() {
+            const container = document.getElementById('activeFilterTags');
+            container.innerHTML = '';
+
+            const tags = [];
+            const searchQuery = (document.getElementById('searchInput').value || '').trim();
+            const internType = document.getElementById('internTypeFilter').value;
+            const companyType = document.getElementById('companyTypeFilter').value;
+            const status = document.getElementById('statusFilter').value;
+
+            if (selectedRegion) tags.push({ label: `지역: ${selectedRegion}`, clear: () => selectRegion('') });
+            if (internType) tags.push({ label: `구분: ${internType}`, clear: () => { document.getElementById('internTypeFilter').value = ''; applyFilters(); } });
+            if (companyType) tags.push({ label: `기업: ${companyType}`, clear: () => { document.getElementById('companyTypeFilter').value = ''; applyFilters(); } });
+            if (status) tags.push({ label: `상태: ${status}`, clear: () => { document.getElementById('statusFilter').value = ''; applyFilters(); } });
+            if (searchQuery) tags.push({ label: `검색어: "${searchQuery}"`, clear: () => { document.getElementById('searchInput').value = ''; applyFilters(); } });
+
+            if (tags.length === 0) {
+                container.innerHTML = '<span class="text-xs text-slate-400">적용된 조건: 전체 검색</span>';
+                return;
+            }
+
+            tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-kblue-700 border border-blue-100';
+                span.innerHTML = `
+                    <span>${tag.label}</span>
+                    <button type="button" class="text-blue-400 hover:text-blue-700 ml-0.5">&times;</button>
+                `;
+                span.querySelector('button').onclick = tag.clear;
+                container.appendChild(span);
+            });
+        }
+
+        // 필터 전체 초기화
+        function resetAllFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('internTypeFilter').value = '';
+            document.getElementById('companyTypeFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('sortBy').value = 'id_asc';
+            selectedRegion = '';
+            renderRegionButtons();
+            document.getElementById('regionCountBadge').textContent = '전체 권역 대상';
+            applyFilters();
+            showToast('필터가 모두 초기화되었습니다.');
+        }
+
+        // 뷰 모드 전환 (카드 vs 테이블)
+        function setViewMode(mode) {
+            currentViewMode = mode;
+            const gridContainer = document.getElementById('internGridContainer');
+            const tableContainer = document.getElementById('internTableContainer');
+            const gridBtn = document.getElementById('viewGridBtn');
+            const tableBtn = document.getElementById('viewTableBtn');
+
+            if (mode === 'grid') {
+                gridContainer.classList.remove('hidden');
+                tableContainer.classList.add('hidden');
+                gridBtn.className = 'px-3 py-1 text-xs font-medium rounded-md bg-white text-slate-800 shadow-xs flex items-center gap-1 transition-all';
+                tableBtn.className = 'px-3 py-1 text-xs font-medium rounded-md text-slate-600 hover:text-slate-800 flex items-center gap-1 transition-all';
+            } else {
+                gridContainer.classList.add('hidden');
+                tableContainer.classList.remove('hidden');
+                tableBtn.className = 'px-3 py-1 text-xs font-medium rounded-md bg-white text-slate-800 shadow-xs flex items-center gap-1 transition-all';
+                gridBtn.className = 'px-3 py-1 text-xs font-medium rounded-md text-slate-600 hover:text-slate-800 flex items-center gap-1 transition-all';
+            }
+        }
+
+        // 검색 결과 화면 렌더링
+        function renderResults() {
+            const count = filteredInterns.length;
+            document.getElementById('resultCountBadge').textContent = `총 ${count}건`;
+
+            const emptyContainer = document.getElementById('emptyResultContainer');
+            const gridContainer = document.getElementById('internGridContainer');
+            const tableContainer = document.getElementById('internTableContainer');
+
+            if (count === 0) {
+                emptyContainer.classList.remove('hidden');
+                gridContainer.classList.add('hidden');
+                tableContainer.classList.add('hidden');
+                return;
+            }
+
+            emptyContainer.classList.add('hidden');
+            if (currentViewMode === 'grid') {
+                gridContainer.classList.remove('hidden');
+                tableContainer.classList.add('hidden');
+            } else {
+                gridContainer.classList.add('hidden');
+                tableContainer.classList.remove('hidden');
+            }
+
+            // 1. 카드 뷰 렌더링
+            gridContainer.innerHTML = '';
+            filteredInterns.forEach(item => {
+                gridContainer.appendChild(createInternCard(item));
+            });
+
+            // 2. 테이블 뷰 렌더링
+            const tableBody = document.getElementById('internTableBody');
+            tableBody.innerHTML = '';
+            filteredInterns.forEach(item => {
+                tableBody.appendChild(createInternTableRow(item));
+            });
+        }
+
+        // 인턴처 카드 엘리먼트 생성
+        function createInternCard(item) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-2xl border border-slate-200/90 hover:border-kblue-600/60 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between overflow-hidden group';
+
+            const isRecruiting = (item.status || '모집중').includes('모집');
+            const matchedCount = KDISSW.getMatchedCountForIntern(item.id);
+            const recruitCountText = item.recruitCount ? (item.recruitCount.includes('명') ? item.recruitCount : `${item.recruitCount}명`) : '1명';
+            const cleanAddr = (item.address || '').split('\n')[0];
+
+            card.innerHTML = `
+                <div class="p-5.5">
+                    <!-- 상단 배지 바 -->
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <span class="px-2 py-0.5 rounded-md text-[11px] font-bold ${isRecruiting ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'}">
+                                ${item.status || '모집중'}
+                            </span>
+                            <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-blue-50 text-kblue-700 border border-blue-100">
+                                ${(item.internType || '').includes('직접전환') ? '직접전환형' : ((item.internType || '').includes('체험') ? '체험형' : '사업단')}
+                            </span>
+                            <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700">
+                                ${item.region || '기타'}
+                            </span>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-400">No.${item.id}</span>
+                    </div>
+
+                    <!-- 기업명 및 업종 -->
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-kblue-700 transition-colors line-clamp-1 mb-1">
+                        ${item.companyName}
+                    </h3>
+                    <p class="text-xs text-slate-500 line-clamp-1 mb-3.5">
+                        ${item.industry || '업종 미지정'} · ${item.companyType || '일반기업'} · 대표: ${item.ceoName || '-'}
+                    </p>
+
+                    <!-- 직무 내용 요약 박스 -->
+                    <div class="bg-slate-50 rounded-xl p-3 mb-3.5 border border-slate-100">
+                        <span class="text-[11px] font-bold text-slate-500 block mb-1">주요 직무</span>
+                        <p class="text-xs text-slate-700 line-clamp-2 leading-relaxed">
+                            ${item.jobDesc || '상세 직무 내용 문의 요망'}
+                        </p>
+                    </div>
+
+                    <!-- 핵심 근무조건 요약 리스트 -->
+                    <dl class="space-y-1.5 text-xs text-slate-600 mb-3.5">
+                        <div class="flex items-center justify-between">
+                            <dt class="text-slate-400">모집규모 / 근무시간:</dt>
+                            <dd class="font-semibold text-slate-800">${recruitCountText} / ${item.weeklyHours || '40시간'}</dd>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <dt class="text-slate-400">근무기간:</dt>
+                            <dd class="font-semibold text-slate-800">${item.workPeriod || '협의'}</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-2">
+                            <dt class="text-slate-400 shrink-0">근무지:</dt>
+                            <dd class="font-medium text-slate-800 text-right line-clamp-1">${cleanAddr || '-'}</dd>
+                        </div>
+                    </dl>
+
+                    <!-- 실시간 매칭 배지 -->
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <span class="text-slate-500 flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full ${matchedCount > 0 ? 'bg-amber-400' : 'bg-slate-300'}"></span>
+                            매칭 현황:
+                        </span>
+                        <span class="font-bold ${matchedCount > 0 ? 'text-korange-600' : 'text-slate-400'}">
+                            ${matchedCount > 0 ? `${matchedCount}명 매칭완료` : '매칭 대기중'}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 카드 하단 버튼 바 -->
+                <div class="bg-slate-50/80 px-5 py-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                    <button onclick="openDetailModal(${item.id})" class="px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-kblue-700 bg-white border border-slate-300 rounded-lg shadow-2xs hover:bg-slate-50 transition-colors flex items-center gap-1">
+                        <span>상세보기</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                    <button onclick="openApplyMatchingModal(${item.id})" class="px-3.5 py-1.5 text-xs font-bold text-white bg-korange-500 hover:bg-korange-600 rounded-lg shadow-2xs transition-colors flex items-center gap-1">
+                        <span>매칭 신청</span>
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+
+        // 인턴처 테이블 행 엘리먼트 생성
+        function createInternTableRow(item) {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50 transition-colors';
+
+            const isRecruiting = (item.status || '모집중').includes('모집');
+            const matchedCount = KDISSW.getMatchedCountForIntern(item.id);
+            const cleanAddr = (item.address || '').split('\n')[0];
+
+            tr.innerHTML = `
+                <td class="py-3 px-4 font-semibold text-slate-400 text-xs">${item.id}</td>
+                <td class="py-3 px-4">
+                    <span class="px-2 py-0.5 rounded text-[11px] font-bold ${isRecruiting ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'}">
+                        ${item.status || '모집중'}
+                    </span>
+                </td>
+                <td class="py-3 px-4 font-semibold text-slate-800 text-xs">${item.region || '-'}</td>
+                <td class="py-3 px-4">
+                    <div class="font-bold text-slate-900 line-clamp-1">${item.companyName}</div>
+                    <div class="text-[11px] text-slate-400 line-clamp-1">${item.industry || '-'}</div>
+                </td>
+                <td class="py-3 px-4 text-xs font-medium text-slate-600">${item.internType || '-'}</td>
+                <td class="py-3 px-4 max-w-xs">
+                    <p class="text-xs text-slate-700 line-clamp-1">${item.jobDesc || '-'}</p>
+                </td>
+                <td class="py-3 px-4 text-xs font-bold text-slate-800">${item.recruitCount || '1'}</td>
+                <td class="py-3 px-4 max-w-xs">
+                    <span class="text-xs text-slate-600 line-clamp-1" title="${cleanAddr}">${cleanAddr || '-'}</span>
+                </td>
+                <td class="py-3 px-4">
+                    <span class="text-xs font-bold ${matchedCount > 0 ? 'text-korange-600' : 'text-slate-400'}">
+                        ${matchedCount}명
+                    </span>
+                </td>
+                <td class="py-3 px-4 text-center space-x-1 shrink-0">
+                    <button onclick="openDetailModal(${item.id})" class="px-2 py-1 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded hover:bg-slate-50">
+                        상세
+                    </button>
+                    <button onclick="openApplyMatchingModal(${item.id})" class="px-2 py-1 text-xs font-bold text-white bg-korange-500 rounded hover:bg-korange-600">
+                        신청
+                    </button>
+                </td>
+            `;
+            return tr;
+        }
+
+        // 인턴처 상세 모달 열기
+        function openDetailModal(id) {
+            currentSelectedInternId = id;
+            const intern = currentInterns.find(i => String(i.id) === String(id));
+            if (!intern) return;
+
+            const isRecruiting = (intern.status || '모집중').includes('모집');
+            const matchedCount = KDISSW.getMatchedCountForIntern(intern.id);
+
+            // 배지 업데이트
+            const statusBadge = document.getElementById('modalStatusBadge');
+            statusBadge.textContent = intern.status || '모집중';
+            statusBadge.className = `px-2.5 py-1 text-xs font-bold rounded-full ${isRecruiting ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'}`;
+
+            document.getElementById('modalInternTypeBadge').textContent = intern.internType || '인턴사업단';
+            document.getElementById('modalRegionBadge').textContent = intern.region || '기타';
+
+            // 텍스트 필드 업데이트
+            document.getElementById('modalIdText').textContent = `No. ${intern.id}`;
+            document.getElementById('modalCompanyName').textContent = intern.companyName;
+            document.getElementById('modalCeoName').textContent = intern.ceoName || '-';
+            document.getElementById('modalCompanyType').textContent = intern.companyType || '-';
+            document.getElementById('modalCompanyScale').textContent = intern.companyScale || '-';
+            document.getElementById('modalIndustry').textContent = intern.industry || '-';
+            document.getElementById('modalAddress').textContent = intern.address || '주소 정보 미기재';
+
+            // 네이버 지도 버튼 URL 연계
+            const naverMapUrl = KDISSW.getNaverMapUrl(intern.address);
+            document.getElementById('modalNaverMapBtn').href = naverMapUrl;
+
+            // 근무조건
+            document.getElementById('modalRecruitCount').textContent = intern.recruitCount ? (intern.recruitCount.includes('명') ? intern.recruitCount : `${intern.recruitCount}명`) : '1명';
+            document.getElementById('modalWorkHours').textContent = intern.workHours || '협의';
+            document.getElementById('modalWeeklyHours').textContent = intern.weeklyHours || '40시간';
+            document.getElementById('modalWorkPeriod').textContent = intern.workPeriod || '협의';
+
+            // 직무 & 자격요건
+            document.getElementById('modalJobDesc').textContent = intern.jobDesc || '세부 직무 문의 요망';
+            document.getElementById('modalRequirements').textContent = intern.requirements || '별도 자격요건 및 우대사항 없음';
+
+            // 접수 & 발굴 기관
+            document.getElementById('modalApplyMethod').textContent = intern.applyMethod || '광역담당자를 통해 매칭';
+            document.getElementById('modalApplyDetails').textContent = intern.applyDetails || '-';
+            document.getElementById('modalDeadline').textContent = intern.deadline || '상시모집';
+            document.getElementById('modalMainPhone').textContent = intern.mainPhone || '-';
+
+            document.getElementById('modalOrgName').textContent = intern.orgName || '-';
+            const mgrText = intern.managerName ? `${intern.managerName} ${intern.managerTitle || ''} (${intern.managerContact || ''})` : '-';
+            document.getElementById('modalManagerInfo').textContent = mgrText;
+            const hrText = intern.hrName ? `${intern.hrName} ${intern.hrTitle || ''} (${intern.hrContact || intern.mainPhone || ''})` : '-';
+            document.getElementById('modalHrInfo').textContent = hrText;
+
+            // 매칭 결과
+            const matchResultText = matchedCount > 0 ? `${matchedCount}명 매칭 완료 (${intern.matchedOrg || '지역자활센터'})` : '현재 매칭 신청 접수 가능';
+            document.getElementById('modalMatchingResult').textContent = matchResultText;
+            document.getElementById('modalBottomMatchedCount').textContent = `${matchedCount}명`;
+
+            // 모달 표시
+            document.getElementById('internDetailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailModal() {
+            document.getElementById('internDetailModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 현재 모달 상세 PDF 다운로드
+        function downloadCurrentDetailPdf() {
+            if (!currentSelectedInternId) return;
+            const intern = currentInterns.find(i => String(i.id) === String(currentSelectedInternId));
+            const filename = `한국자활복지개발원_인턴처안내_${intern ? intern.companyName.replace(/\s+/g, '_') : '상세정보'}.pdf`;
+            KDISSW.exportInternToPdf('pdfExportArea', filename);
+        }
+
+        // 매칭 신청 모달 열기
+        function openApplyMatchingModal(id) {
+            currentSelectedInternId = id;
+            const intern = currentInterns.find(i => String(i.id) === String(id));
+            if (!intern) return;
+
+            document.getElementById('applyTargetCompanyName').textContent = intern.companyName;
+            document.getElementById('applyTargetInfo').textContent = `${intern.region || ''} | ${intern.internType || ''} | 모집 ${intern.recruitCount || '1'}명`;
+
+            // 폼 초기화
+            document.getElementById('applyParticipantName').value = '';
+            document.getElementById('applyOrganization').value = '';
+            document.getElementById('applyContact').value = '';
+            document.getElementById('applyNote').value = '';
+
+            document.getElementById('applyMatchingModal').classList.remove('hidden');
+        }
+
+        function closeApplyMatchingModal() {
+            document.getElementById('applyMatchingModal').classList.add('hidden');
+        }
+
+        // 매칭 신청 제출 처리
+        function submitMatchingForm(event) {
+            event.preventDefault();
+            if (!currentSelectedInternId) return;
+
+            const participantName = document.getElementById('applyParticipantName').value.trim();
+            const organization = document.getElementById('applyOrganization').value.trim();
+            const contact = document.getElementById('applyContact').value.trim();
+            const note = document.getElementById('applyNote').value.trim();
+
+            if (!participantName || !organization || !contact) {
+                alert('필수 입력 항목(참여자 성명, 소속 기관, 연락처)을 모두 입력해 주세요.');
+                return;
+            }
+
+            const result = KDISSW.applyMatching(currentSelectedInternId, {
+                participantName,
+                organization,
+                contact,
+                note
+            });
+
+            if (result) {
+                closeApplyMatchingModal();
+                showToast(`[${participantName}님] 인턴처 매칭 신청이 성공적으로 접수되었습니다!`);
+                refreshData();
+
+                // 상세 모달이 열려있다면 해당 정보도 갱신
+                if (!document.getElementById('internDetailModal').classList.contains('hidden')) {
+                    openDetailModal(currentSelectedInternId);
+                }
+            } else {
+                alert('매칭 신청 처리 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 하단 실시간 매칭 현황 섹션 렌더링
+        function renderMatchingStatusSection() {
+            const matchings = KDISSW.getMatchings();
+            const stats = KDISSW.calculateStats();
+
+            // 퀵 통계 카드
+            const statsContainer = document.getElementById('matchingQuickStats');
+            statsContainer.innerHTML = `
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <span class="text-xs text-slate-500 font-medium block">총 누적 매칭 인원</span>
+                    <strong class="text-xl font-bold text-kblue-700 block mt-1">${stats.totalMatched}명</strong>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <span class="text-xs text-slate-500 font-medium block">총 모집 정원 대비 매칭률</span>
+                    <strong class="text-xl font-bold text-emerald-600 block mt-1">${stats.matchRate}%</strong>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <span class="text-xs text-slate-500 font-medium block">매칭 완료 인턴처 수</span>
+                    <strong class="text-xl font-bold text-slate-800 block mt-1">${new Set(matchings.map(m => m.internId)).size}개소</strong>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <span class="text-xs text-slate-500 font-medium block">모집 잔여 정원 (추정)</span>
+                    <strong class="text-xl font-bold text-korange-600 block mt-1">${Math.max(0, stats.totalRecruit - stats.totalMatched)}명</strong>
+                </div>
+            `;
+
+            // 최근 매칭 내역 테이블 렌더링 (최근 8건)
+            const tableBody = document.getElementById('recentMatchingsTableBody');
+            tableBody.innerHTML = '';
+
+            const recentList = matchings.slice(0, 8);
+            if (recentList.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-slate-400">현재 등록된 매칭 내역이 없습니다.</td></tr>';
+                return;
+            }
+
+            recentList.forEach(m => {
+                const tr = document.createElement('tr');
+                // 성명 마스킹 (예: 홍길동 -> 홍*동)
+                let maskedName = m.participantName || '참여자';
+                if (maskedName.length > 2) {
+                    maskedName = maskedName[0] + '*'.repeat(maskedName.length - 2) + maskedName[maskedName.length - 1];
+                } else if (maskedName.length === 2) {
+                    maskedName = maskedName[0] + '*';
+                }
+
+                tr.innerHTML = `
+                    <td class="py-2.5 px-3 font-mono text-slate-400">${m.appliedAt || '-'}</td>
+                    <td class="py-2.5 px-3 font-semibold text-slate-900">${m.companyName}</td>
+                    <td class="py-2.5 px-3">${maskedName} (${m.organization || '지역자활센터'})</td>
+                    <td class="py-2.5 px-3">
+                        <span class="px-2 py-0.5 rounded text-[11px] font-bold ${m.status === '매칭완료' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${m.status || '매칭완료'}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // 공지사항 모달 열기
+        function openNoticeModal() {
+            const notices = KDISSW.getNotices();
+            const container = document.getElementById('noticeListContainer');
+            container.innerHTML = '';
+
+            notices.forEach(notice => {
+                const item = document.createElement('div');
+                item.className = 'py-4 cursor-pointer hover:bg-slate-50 px-2 rounded-lg transition-colors';
+                item.innerHTML = `
+                    <div class="flex items-center gap-2 mb-1.5">
+                        ${notice.important ? '<span class="px-2 py-0.5 text-[10px] font-bold bg-rose-100 text-rose-700 rounded-full">중요</span>' : ''}
+                        <span class="text-xs text-slate-400">${notice.date}</span>
+                        <span class="text-xs text-slate-300">|</span>
+                        <span class="text-xs text-slate-500">${notice.author}</span>
+                    </div>
+                    <h4 class="text-sm font-bold text-slate-900 mb-1.5">${notice.title}</h4>
+                    <p class="text-xs text-slate-600 whitespace-pre-line leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100">${notice.content}</p>
+                `;
+                container.appendChild(item);
+            });
+
+            document.getElementById('noticeModal').classList.remove('hidden');
+        }
+
+        function closeNoticeModal() {
+            document.getElementById('noticeModal').classList.add('hidden');
+        }
+
+        // Q&A 모달 열기
+        function openQnaModal() {
+            renderQnaList();
+            document.getElementById('qnaModal').classList.remove('hidden');
+        }
+
+        function closeQnaModal() {
+            document.getElementById('qnaModal').classList.add('hidden');
+        }
+
+        function toggleQnaWriteForm() {
+            const form = document.getElementById('qnaWriteFormContainer');
+            form.classList.toggle('hidden');
+        }
+
+        function renderQnaList() {
+            const qnaList = KDISSW.getQnaList();
+            const container = document.getElementById('qnaListContainer');
+            container.innerHTML = '';
+
+            qnaList.forEach(q => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="px-2 py-0.5 text-[11px] font-bold rounded-md ${q.status === '답변완료' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${q.status}
+                        </span>
+                        <span class="text-xs text-slate-400">${q.date} · ${q.author}</span>
+                    </div>
+                    <h4 class="text-sm font-bold text-slate-900">Q. ${q.title}</h4>
+                    <p class="text-xs text-slate-600 whitespace-pre-line">${q.question}</p>
+                    ${q.answer ? `
+                        <div class="mt-3 pt-3 border-t border-slate-200/80 bg-white p-3 rounded-lg border border-slate-200">
+                            <div class="flex items-center justify-between text-[11px] text-kblue-700 font-bold mb-1">
+                                <span>A. ${q.answerAuthor || '관리자 답변'}</span>
+                                <span class="text-slate-400 font-normal">${q.answerDate || ''}</span>
+                            </div>
+                            <p class="text-xs text-slate-700 whitespace-pre-line leading-relaxed">${q.answer}</p>
+                        </div>
+                    ` : '<div class="text-[11px] text-amber-600 italic">관리자가 질문을 확인하고 답변을 준비 중입니다.</div>'}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function submitQna(event) {
+            event.preventDefault();
+            const author = document.getElementById('qnaAuthor').value.trim();
+            const title = document.getElementById('qnaTitle').value.trim();
+            const question = document.getElementById('qnaQuestion').value.trim();
+
+            if (!author || !title || !question) return;
+
+            KDISSW.addQna({ author, title, question });
+            toggleQnaWriteForm();
+            renderQnaList();
+            showToast('질문이 등록되었습니다. 관리자가 확인 후 답변드립니다.');
+        }
+
+        // 토스트 알림 표시
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toastNotification');
+            const msgEl = document.getElementById('toastMessage');
+            const iconEl = document.getElementById('toastIcon');
+
+            msgEl.textContent = message;
+            iconEl.textContent = isError ? '✕' : '✓';
+            iconEl.className = isError ? 'text-rose-400 text-lg' : 'text-emerald-400 text-lg';
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // 부드러운 스크롤 유틸
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
